@@ -1,0 +1,72 @@
+# HowardHinnant/date Conan package
+# Dmitriy Vetutnev, ODANT 2018
+
+
+from conans import ConanFile, CMake, tools
+
+
+class DateConan(ConanFile):
+    name = "date"
+    version = "2.4.1+0"
+    license = "MIT License https://raw.githubusercontent.com/HowardHinnant/date/master/LICENSE.txt"
+    description = "A date and time library based on the C++11/14/17 <chrono> header "
+    url = "https://github.com/odant/conan-date"
+    settings = {
+        "os": ["Windows", "Linux"],
+        "compiler": ["Visual Studio", "gcc"],
+        "build_type": ["Debug", "Release"],
+        "arch": ["x86_64", "x86", "mips"]
+    }
+    options = {
+        "with_unit_tests": [False, True],
+    }
+    default_options = "with_unit_tests=False"
+    generators = "cmake"
+    exports_sources = "src/*", "CMakeLists.txt", "tzdata/*", "external_tzdata.patch"
+    no_copy_source = True
+    build_policy = "missing"
+
+    def configure(self):
+        # Only C++11
+        if self.settings.compiler.get_safe("libcxx") == "libstdc++":
+            raise Exception("This package is only compatible with libstdc++11")
+
+    def source(self):
+        tools.patch(patch_file="external_tzdata.patch")
+
+    def build(self):
+        build_type = "RelWithDebInfo" if self.settings.build_type == "Release" else "Debug"
+        cmake = CMake(self, build_type=build_type)
+        cmake.verbose = True
+        #
+        if self.settings.os != "Windows":
+            cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE:BOOL"] = "ON"
+        cmake.definitions["BUILD_SHARED_LIBS:BOOL"] = "OFF"
+        #
+        cmake.definitions["USE_SYSTEM_TZ_DB:BOOL"] = "OFF"
+        cmake.definitions["USE_TZ_DB_IN_DOT:BOOL"] = "OFF"
+        cmake.definitions["ENABLE_DATE_TESTING:BOOL"] = "ON" if self.options.with_unit_tests else "OFF"
+        #
+        cmake.configure()
+        cmake.build()
+        if self.options.with_unit_tests:
+            cmake.build(target="testit")
+            if self.settings.os == "Windows":
+                self.run("ctest --build-config %s" % self.settings.build_type)
+            else:
+                self.run("ctest")
+
+    def package(self):
+        self.copy("*.h", dst="include", src="src/include", keep_path=True)
+        self.copy("tz.a", dst="lib", src="lib", keep_path=False)
+        self.copy("tz.lib", dst="lib", src="lib", keep_path=False)
+        self.copy("tz.pdb", dst="lib", src="lib", keep_path=False)
+        self.copy("tz.pdb", dst="lib", src="src/tz.dir/RelWithDebInfo", keep_path=False)
+        self.copy("*", dst="tzdata", src="tzdata", keep_path=False)
+
+    def package_id(self):
+        self.info.options.with_unit_tests = "any"
+
+    def package_info(self):
+        self.cpp_info.libs = ["tz"]
+        self.cpp_info.defines = ["USE_OS_TZDB=0"]
