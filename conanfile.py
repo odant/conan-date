@@ -71,4 +71,8 @@ class DateConan(ConanFile):
         self.cpp_info.libs = ["tz"]
         if self.settings.os != "Windows":
             self.cpp_info.libs.extend(["pthread"])
-        self.cpp_info.defines = ["USE_OS_TZDB=0"]
+        self.cpp_info.defines = [
+            "USE_OS_TZDB=0",
+            "HAS_REMOTE_API=0",
+            "AUTO_DOWNLOAD=0"
+        ]
