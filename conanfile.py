@@ -58,7 +58,7 @@ class DateConan(ConanFile):
 
     def package(self):
         self.copy("*.h", dst="include", src="src/include", keep_path=True)
-        self.copy("tz.a", dst="lib", src="lib", keep_path=False)
+        self.copy("libtz.a", dst="lib", src="lib", keep_path=False)
         self.copy("tz.lib", dst="lib", src="lib", keep_path=False)
         self.copy("tz.pdb", dst="lib", src="lib", keep_path=False)
         self.copy("tz.pdb", dst="lib", src="src/tz.dir/RelWithDebInfo", keep_path=False)
@@ -69,4 +69,6 @@ class DateConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ["tz"]
+        if self.settings.os != "Windows":
+            self.cpp_info.libs.extend(["pthread"])
         self.cpp_info.defines = ["USE_OS_TZDB=0"]
