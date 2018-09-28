@@ -65,3 +65,20 @@ int64_t Clock::getTicks() noexcept {
 
 } // namespace oda
 #endif // _WIN32
+
+
+#ifdef __linux__ // Linux implementation
+
+#include <time.h>
+
+namespace oda {
+
+int64_t Clock::getTicks() noexcept {
+    timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    return ts.tv_sec * 1000'000'000 + ts.tv_nsec;
+}
+
+} // namespace oda
+#endif // __linux__
+
