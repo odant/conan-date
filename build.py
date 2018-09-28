@@ -23,7 +23,7 @@ if __name__ == "__main__":
         image = os.environ['CONAN_DOCKER_IMAGE']
         print("Installing tzdata in {}".format(image))
         modified_image = '{}-tzdata'.format(image)
-        check_call(['docker', 'pull', image])
+        #check_call(['docker', 'pull', image])
         check_call(['docker', 'run', '--name', 'img', image, 'bash', '-c', 'sudo apt-get update && sudo apt-get install -qy tzdata'])
         check_call(['docker', 'commit', 'img', modified_image])
         os.environ['CONAN_DOCKER_IMAGE'] = modified_image
