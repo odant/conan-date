@@ -5,6 +5,8 @@
 
 
 #include <chrono>
+#include <cassert>
+#include <limits>
 
 namespace oda {
 
@@ -20,6 +22,17 @@ struct Clock
     static time_point now() noexcept {
         const auto ticks = getTicks();
         return time_point{duration{ticks}};
+    }
+
+    static std::time_t to_time_t(const time_point& t) noexcept {
+        const auto res = std::chrono::duration_cast<std::chrono::seconds>(t.time_since_epoch()).count();
+        assert(res <= std::numeric_limits<std::time_t>::max());
+        return static_cast<std::time_t>(res);
+    }
+
+    static time_point from_time_t(std::time_t t) noexcept {
+        using From = std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds>;
+        return std::chrono::time_point_cast<std::chrono::system_clock::duration>(From{std::chrono::seconds{t}});
     }
 
 private:
