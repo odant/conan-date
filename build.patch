@@ -1,11 +1,13 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index f025a3a..093ef6d 100644
+index f025a3a..a38e274 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -8,6 +8,8 @@ find_package( Threads REQUIRED )
+@@ -7,7 +7,9 @@ include( GNUInstallDirs )
+ find_package( Threads REQUIRED )
  
  # Override by setting on CMake command line.
- set( CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested.")
+-set( CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested.")
++set( CMAKE_CXX_STANDARD 14 CACHE STRING "The C++ standard whose features are requested.")
 +set(CMAKE_CXX_STANDARD_REQUIRED ON)
 +set(CMAKE_CXX_EXTENSIONS OFF)
  
