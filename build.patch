@@ -1,8 +1,17 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index f025a3a..614db5e 100644
+index f025a3a..093ef6d 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -45,21 +45,9 @@ set( HEADER_FILES
+@@ -8,6 +8,8 @@ find_package( Threads REQUIRED )
+ 
+ # Override by setting on CMake command line.
+ set( CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested.")
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
++set(CMAKE_CXX_EXTENSIONS OFF)
+ 
+ option( USE_SYSTEM_TZ_DB "Use the operating system's timezone database" OFF )
+ option( USE_TZ_DB_IN_DOT "Save the timezone database in the current folder" OFF )
+@@ -45,21 +47,9 @@ set( HEADER_FILES
  
  add_library( tz ${HEADER_FILES} ${SOURCE_FOLDER}/tz.cpp )
  

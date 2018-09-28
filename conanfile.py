@@ -7,7 +7,7 @@ from conans import ConanFile, CMake, tools
 
 class DateConan(ConanFile):
     name = "date"
-    version = "2.4.1+0"
+    version = "2.4.1+1"
     license = "MIT License https://raw.githubusercontent.com/HowardHinnant/date/master/LICENSE.txt"
     description = "A date and time library based on the C++11/14/17 <chrono> header "
     url = "https://github.com/odant/conan-date"
@@ -22,7 +22,7 @@ class DateConan(ConanFile):
     }
     default_options = "with_unit_tests=False"
     generators = "cmake"
-    exports_sources = "src/*", "CMakeLists.txt", "tzdata/*", "external_tzdata.patch"
+    exports_sources = "src/*", "CMakeLists.txt", "tzdata/*", "build.patch"
     no_copy_source = True
     build_policy = "missing"
 
@@ -32,7 +32,7 @@ class DateConan(ConanFile):
             raise Exception("This package is only compatible with libstdc++11")
 
     def source(self):
-        tools.patch(patch_file="external_tzdata.patch")
+        tools.patch(patch_file="build.patch")
 
     def build(self):
         build_type = "RelWithDebInfo" if self.settings.build_type == "Release" else "Debug"

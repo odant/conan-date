@@ -8,6 +8,8 @@ find_package( Threads REQUIRED )
 
 # Override by setting on CMake command line.
 set( CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested.")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 option( USE_SYSTEM_TZ_DB "Use the operating system's timezone database" OFF )
 option( USE_TZ_DB_IN_DOT "Save the timezone database in the current folder" OFF )
@@ -45,21 +47,9 @@ set( HEADER_FILES
 
 add_library( tz ${HEADER_FILES} ${SOURCE_FOLDER}/tz.cpp )
 
-if( USE_SYSTEM_TZ_DB )
-	target_compile_definitions( tz PRIVATE -DUSE_AUTOLOAD=0 )
-	target_compile_definitions( tz PRIVATE -DHAS_REMOTE_API=0 )
-	# cannot set USE_OS_TZDB to 1 on Windows
-	if( NOT WIN32 )
-		target_compile_definitions( tz PUBLIC -DUSE_OS_TZDB=1 )
-	endif( )
-else( )
-	target_compile_definitions( tz PRIVATE -DUSE_AUTOLOAD=1 )
-	target_compile_definitions( tz PRIVATE -DHAS_REMOTE_API=1 )
-	target_compile_definitions( tz PUBLIC -DUSE_OS_TZDB=0 )
-	find_package( CURL REQUIRED )
-	include_directories( SYSTEM ${CURL_INCLUDE_DIRS} )
-	set( OPTIONAL_LIBRARIES ${CURL_LIBRARIES} )
-endif( )
+target_compile_definitions( tz PRIVATE -DUSE_AUTOLOAD=0 )
+target_compile_definitions( tz PRIVATE -DHAS_REMOTE_API=0 )
+target_compile_definitions( tz PUBLIC -DUSE_OS_TZDB=0 )
 
 if( USE_TZ_DB_IN_DOT )
 	target_compile_definitions( tz PRIVATE -DINSTALL=. )
