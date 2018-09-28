@@ -12,8 +12,6 @@ env:
     CONAN_LOGIN_USERNAME: travis
     CONAN_STABLE_BRANCH_PATTERN: release/*
 
-    CONAN_DOCKER_ENTRY_SCRIPT: 'sudo apt-get update && sudo apt-get install -qy tzdata'
-
 linux: &linux_build
   os: linux
   dist: trusty

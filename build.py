@@ -18,11 +18,13 @@ def filter_libcxx(builds):
 
 
 if __name__ == "__main__":
+    command = "sudo apt-get -qq update && sudo apt-get -qq install -y tzdata"
     builder = ConanMultiPackager(
         username=username,
         visual_versions=visual_versions,
         visual_runtimes=visual_runtimes,
         exclude_vcvars_precommand=True
+        docker_entry_script=command
     )
     builder.add_common_builds(pure_c=False)
     # Adjusting build configurations
