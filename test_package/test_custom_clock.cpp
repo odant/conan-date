@@ -17,8 +17,6 @@ struct Clock
 
     static constexpr bool is_steady = false;
 
-    static constexpr int64_t epoch = 116444736000000000LL * 100LL;
-
     static time_point now() noexcept {
         const auto ticks = getTicks();
         return time_point{duration{ticks}};
@@ -57,11 +55,12 @@ int main(int, char**) {
 
 namespace oda {
 
+static constexpr int64_t epoch = 116444736000000000LL;
 int64_t Clock::getTicks() noexcept {
     FILETIME ft;
     ::GetSystemTimeAsFileTime(&ft);
     const int64_t winTicks = (static_cast<int64_t>(ft.dwHighDateTime) << 32) + static_cast<int64_t>(ft.dwLowDateTime);
-    return (winTicks - (epoch / 100LL)) * 100LL;
+    return (winTicks - epoch) * 100LL;
 }
 
 } // namespace oda
