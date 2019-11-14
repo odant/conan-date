@@ -15,7 +15,7 @@ class DateConan(ConanFile):
         "os": ["Windows", "Linux"],
         "compiler": ["Visual Studio", "gcc"],
         "build_type": ["Debug", "Release"],
-        "arch": ["x86_64", "x86", "mips"]
+        "arch": ["x86_64", "x86", "mips", "armv7"]
     }
     options = {
         "with_unit_tests": [False, True],
