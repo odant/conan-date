@@ -7,7 +7,7 @@ from conans import ConanFile, CMake, tools
 
 class DateConan(ConanFile):
     name = "date"
-    version = "2.4.1+2"
+    version = "3.0.0+0"
     license = "MIT License https://raw.githubusercontent.com/HowardHinnant/date/master/LICENSE.txt"
     description = "A date and time library based on the C++11/14/17 <chrono> header "
     url = "https://github.com/odant/conan-date"
@@ -25,6 +25,7 @@ class DateConan(ConanFile):
     exports_sources = "src/*", "CMakeLists.txt", "tzdata/*", "build.patch"
     no_copy_source = True
     build_policy = "missing"
+    build_type = None
 
     def configure(self):
         # Only C++11
@@ -35,8 +36,8 @@ class DateConan(ConanFile):
         tools.patch(patch_file="build.patch")
 
     def build(self):
-        build_type = "RelWithDebInfo" if self.settings.build_type == "Release" else "Debug"
-        cmake = CMake(self, build_type=build_type)
+        self.build_type = "RelWithDebInfo" if self.settings.build_type == "Release" else "Debug"
+        cmake = CMake(self, build_type=self.build_type)
         cmake.verbose = True
         #
         if self.settings.os != "Windows":
@@ -46,29 +47,30 @@ class DateConan(ConanFile):
         cmake.definitions["USE_SYSTEM_TZ_DB:BOOL"] = "OFF"
         cmake.definitions["USE_TZ_DB_IN_DOT:BOOL"] = "OFF"
         cmake.definitions["ENABLE_DATE_TESTING:BOOL"] = "ON" if self.options.with_unit_tests else "OFF"
+        cmake.definitions["BUILD_TZ_LIB:BOOL"] = "ON"
         #
         cmake.configure()
         cmake.build()
         if self.options.with_unit_tests:
             cmake.build(target="testit")
             if self.settings.os == "Windows":
-                self.run("ctest --build-config %s" % self.settings.build_type)
+                self.run("ctest --build-config %s" % self.build_type)
             else:
                 self.run("ctest")
 
     def package(self):
         self.copy("*.h", dst="include", src="src/include", keep_path=True)
-        self.copy("libtz.a", dst="lib", src="lib", keep_path=False)
-        self.copy("tz.lib", dst="lib", src="lib", keep_path=False)
-        self.copy("tz.pdb", dst="lib", src="lib", keep_path=False)
-        self.copy("tz.pdb", dst="lib", src="src/tz.dir/RelWithDebInfo", keep_path=False)
+        self.copy("libdate-tz.a", dst="lib", src="lib", keep_path=False)
+        self.copy("date-tz.lib", dst="lib", src="lib", keep_path=False)
+        self.copy("date-tz.pdb", dst="lib", src="lib", keep_path=False)
+        self.copy("date-tz.pdb", dst="lib", src="src/date-tz.dir/%s" % self.build_type, keep_path=False)
         self.copy("*", dst="tzdata", src="tzdata", keep_path=False)
 
     def package_id(self):
         self.info.options.with_unit_tests = "any"
 
     def package_info(self):
-        self.cpp_info.libs = ["tz"]
+        self.cpp_info.libs = ["date-tz"]
         if self.settings.os != "Windows":
             self.cpp_info.libs.extend(["pthread"])
         self.cpp_info.defines = [

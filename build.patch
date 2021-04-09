@@ -1,40 +1,43 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index f025a3a..a38e274 100644
+index ad74900..c0bbaa6 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -7,7 +7,9 @@ include( GNUInstallDirs )
- find_package( Threads REQUIRED )
+@@ -24,7 +24,9 @@ include( GNUInstallDirs )
+ get_directory_property( has_parent PARENT_DIRECTORY )
  
  # Override by setting on CMake command line.
--set( CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested.")
+-set( CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested." )
 +set( CMAKE_CXX_STANDARD 14 CACHE STRING "The C++ standard whose features are requested.")
 +set(CMAKE_CXX_STANDARD_REQUIRED ON)
 +set(CMAKE_CXX_EXTENSIONS OFF)
  
  option( USE_SYSTEM_TZ_DB "Use the operating system's timezone database" OFF )
- option( USE_TZ_DB_IN_DOT "Save the timezone database in the current folder" OFF )
-@@ -45,21 +47,9 @@ set( HEADER_FILES
+ option( MANUAL_TZ_DB "User will set TZ DB manually by invoking set_install in their code" OFF )
+@@ -101,12 +103,12 @@ if( BUILD_TZ_LIB )
+         $<INSTALL_INTERFACE:include> )
+     target_compile_definitions( date-tz
+         PRIVATE
+-            AUTO_DOWNLOAD=$<IF:$<OR:$<BOOL:${USE_SYSTEM_TZ_DB}>,$<BOOL:${MANUAL_TZ_DB}>>,0,1>
+-            HAS_REMOTE_API=$<IF:$<OR:$<BOOL:${USE_SYSTEM_TZ_DB}>,$<BOOL:${MANUAL_TZ_DB}>>,0,1>
++            AUTO_DOWNLOAD=0
++            HAS_REMOTE_API=0
+             $<$<AND:$<BOOL:${WIN32}>,$<BOOL:${BUILD_SHARED_LIBS}>>:DATE_BUILD_DLL=1>
+             $<$<BOOL:${USE_TZ_DB_IN_DOT}>:INSTALL=.>
+         PUBLIC
+-            USE_OS_TZDB=$<IF:$<AND:$<BOOL:${USE_SYSTEM_TZ_DB}>,$<NOT:$<BOOL:${WIN32}>>,$<NOT:$<BOOL:${MANUAL_TZ_DB}>>>,1,0>
++            USE_OS_TZDB=0
+         INTERFACE
+             $<$<AND:$<BOOL:${WIN32}>,$<BOOL:${BUILD_SHARED_LIBS}>>:DATE_USE_DLL=1> )
+     set(TZ_HEADERS include/date/tz.h)
+@@ -122,11 +122,6 @@ if( BUILD_TZ_LIB )
+         find_package( Threads )
+         target_link_libraries( date-tz PUBLIC Threads::Threads )
+     endif( )
+-    if( NOT USE_SYSTEM_TZ_DB AND NOT MANUAL_TZ_DB )
+-        find_package( CURL REQUIRED )
+-        target_include_directories( date-tz SYSTEM PRIVATE ${CURL_INCLUDE_DIRS} )
+-        target_link_libraries( date-tz PRIVATE ${CURL_LIBRARIES} )
+-    endif( )
+ endif( )
  
- add_library( tz ${HEADER_FILES} ${SOURCE_FOLDER}/tz.cpp )
- 
--if( USE_SYSTEM_TZ_DB )
--	target_compile_definitions( tz PRIVATE -DUSE_AUTOLOAD=0 )
--	target_compile_definitions( tz PRIVATE -DHAS_REMOTE_API=0 )
--	# cannot set USE_OS_TZDB to 1 on Windows
--	if( NOT WIN32 )
--		target_compile_definitions( tz PUBLIC -DUSE_OS_TZDB=1 )
--	endif( )
--else( )
--	target_compile_definitions( tz PRIVATE -DUSE_AUTOLOAD=1 )
--	target_compile_definitions( tz PRIVATE -DHAS_REMOTE_API=1 )
--	target_compile_definitions( tz PUBLIC -DUSE_OS_TZDB=0 )
--	find_package( CURL REQUIRED )
--	include_directories( SYSTEM ${CURL_INCLUDE_DIRS} )
--	set( OPTIONAL_LIBRARIES ${CURL_LIBRARIES} )
--endif( )
-+target_compile_definitions( tz PRIVATE -DUSE_AUTOLOAD=0 )
-+target_compile_definitions( tz PRIVATE -DHAS_REMOTE_API=0 )
-+target_compile_definitions( tz PUBLIC -DUSE_OS_TZDB=0 )
- 
- if( USE_TZ_DB_IN_DOT )
- 	target_compile_definitions( tz PRIVATE -DINSTALL=. )
+ #[===================================================================[
