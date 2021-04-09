@@ -7,7 +7,7 @@ from conans import ConanFile, CMake, tools
 
 class DateConan(ConanFile):
     name = "date"
-    version = "3.0.0+0"
+    version = "3.0.0+1"
     license = "MIT License https://raw.githubusercontent.com/HowardHinnant/date/master/LICENSE.txt"
     description = "A date and time library based on the C++11/14/17 <chrono> header "
     url = "https://github.com/odant/conan-date"
