@@ -22,7 +22,7 @@ class DateConan(ConanFile):
     }
     default_options = "with_unit_tests=False"
     generators = "cmake"
-    exports_sources = "src/*", "CMakeLists.txt", "tzdata/*", "build.patch", "fix_check_stdc++17.patch"
+    exports_sources = "src/*", "CMakeLists.txt", "tzdata/*", "build.patch"
     no_copy_source = True
     build_policy = "missing"
     build_type = None
@@ -34,7 +34,6 @@ class DateConan(ConanFile):
 
     def source(self):
         tools.patch(patch_file="build.patch")
-        tools.patch(patch_file="fix_check_stdc++17.patch")
 
     def build(self):
         self.build_type = "RelWithDebInfo" if self.settings.build_type == "Release" else "Debug"
