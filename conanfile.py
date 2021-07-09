@@ -7,7 +7,7 @@ from conans import ConanFile, CMake, tools
 
 class DateConan(ConanFile):
     name = "date"
-    version = "3.0.0+1"
+    version = "3.0.1+1"
     license = "MIT License https://raw.githubusercontent.com/HowardHinnant/date/master/LICENSE.txt"
     description = "A date and time library based on the C++11/14/17 <chrono> header "
     url = "https://github.com/odant/conan-date"
@@ -22,7 +22,7 @@ class DateConan(ConanFile):
     }
     default_options = "with_unit_tests=False"
     generators = "cmake"
-    exports_sources = "src/*", "CMakeLists.txt", "tzdata/*", "build.patch"
+    exports_sources = "src/*", "CMakeLists.txt", "tzdata/*", "build.patch", "fix.patch"
     no_copy_source = True
     build_policy = "missing"
     build_type = None
@@ -34,6 +34,7 @@ class DateConan(ConanFile):
 
     def source(self):
         tools.patch(patch_file="build.patch")
+        tools.patch(patch_file="fix.patch")
 
     def build(self):
         self.build_type = "RelWithDebInfo" if self.settings.build_type == "Release" else "Debug"
@@ -47,6 +48,7 @@ class DateConan(ConanFile):
         cmake.definitions["USE_SYSTEM_TZ_DB:BOOL"] = "OFF"
         cmake.definitions["USE_TZ_DB_IN_DOT:BOOL"] = "OFF"
         cmake.definitions["ENABLE_DATE_TESTING:BOOL"] = "ON" if self.options.with_unit_tests else "OFF"
+        cmake.definitions["MANUAL_TZ_DB"] = "ON"
         cmake.definitions["BUILD_TZ_LIB:BOOL"] = "ON"
         #
         cmake.configure()

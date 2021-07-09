@@ -1,0 +1,45 @@
+diff --git a/src/include/date/date.h b/src/include/date/date.h
+index 7b6b4e4..2f361a4 100644
+--- a/src/include/date/date.h
++++ b/src/include/date/date.h
+@@ -1797,7 +1797,6 @@ low_level_fmt(std::basic_ostream<CharT, Traits>& os, const year& y)
+     os.fill('0');
+     os.flags(std::ios::dec | std::ios::internal);
+     os.width(4 + (y < year{0}));
+-    os.imbue(std::locale::classic());
+     os << static_cast<int>(y);
+     return os;
+ }
+@@ -3070,7 +3069,7 @@ operator<<(std::basic_ostream<CharT, Traits>& os, const year_month_day& ymd)
+     detail::save_ostream<CharT, Traits> _(os);
+     os.fill('0');
+     os.flags(std::ios::dec | std::ios::right);
+-    os.imbue(std::locale::classic());
++    os.width(4);
+     os << static_cast<int>(ymd.year()) << '-';
+     os.width(2);
+     os << static_cast<unsigned>(ymd.month()) << '-';
+@@ -4024,7 +4023,6 @@ public:
+             os << '.';
+ #endif
+             date::detail::save_ostream<CharT, Traits> _s(os);
+-            os.imbue(std::locale::classic());
+             os.width(width);
+             os << sub_s_.count();
+         }
+@@ -5311,7 +5309,6 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
+                         os.setstate(std::ios::failbit);
+                     auto const& ymd = fds.ymd;
+                     save_ostream<CharT, Traits> _(os);
+-                    os.imbue(std::locale::classic());
+                     os.fill('0');
+                     os.flags(std::ios::dec | std::ios::right);
+                     os.width(4);
+@@ -5987,7 +5984,6 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
+ #endif
+                     {
+                         save_ostream<CharT, Traits> _(os);
+-                        os.imbue(std::locale::classic());
+                         os << y;
+                     }
+ #if !ONLY_C_LOCALE
