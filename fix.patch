@@ -27,7 +27,7 @@ index 6960e8c..c6a2a32 100644
              os.width(width);
              os << sub_s_.count();
          }
-@@ -5315,7 +5313,6 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
+@@ -5311,7 +5309,6 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
                          os.setstate(std::ios::failbit);
                      auto const& ymd = fds.ymd;
                      save_ostream<CharT, Traits> _(os);
@@ -35,7 +35,7 @@ index 6960e8c..c6a2a32 100644
                      os.fill('0');
                      os.flags(std::ios::dec | std::ios::right);
                      os.width(4);
-@@ -5991,7 +5988,6 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
+@@ -5987,7 +5984,6 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
  #endif
                      {
                          save_ostream<CharT, Traits> _(os);
@@ -43,7 +43,7 @@ index 6960e8c..c6a2a32 100644
                          os << y;
                      }
  #if !ONLY_C_LOCALE
-@@ -8211,6 +8207,8 @@ parse(const CharT* format, Parsable& tp,
+@@ -8177,6 +8173,8 @@ parse(const CharT* format, Parsable& tp,
  
  // duration streaming
  
@@ -52,7 +52,7 @@ index 6960e8c..c6a2a32 100644
  template <class CharT, class Traits, class Rep, class Period>
  inline
  std::basic_ostream<CharT, Traits>&
-@@ -8221,6 +8219,8 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
+@@ -8187,6 +8189,8 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
                   detail::get_units<CharT>(typename Period::type{});
  }
  
