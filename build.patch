@@ -1,13 +1,11 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index ad74900..c0bbaa6 100644
+index 082f835..3110432 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -25,7 +25,9 @@ include( GNUInstallDirs )
- get_directory_property( has_parent PARENT_DIRECTORY )
+@@ -29,6 +29,8 @@ endif ()
  
  # Override by setting on CMake command line.
--set( CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested." )
-+set( CMAKE_CXX_STANDARD 14 CACHE STRING "The C++ standard whose features are requested.")
+ set( CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested." )
 +set(CMAKE_CXX_STANDARD_REQUIRED ON)
 +set(CMAKE_CXX_EXTENSIONS OFF)
  
