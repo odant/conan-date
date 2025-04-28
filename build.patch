@@ -1,7 +1,7 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 082f835..3110432 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -29,6 +29,8 @@ endif ()
  
  # Override by setting on CMake command line.

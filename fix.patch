@@ -1,7 +1,7 @@
 diff --git a/src/include/date/date.h b/src/include/date/date.h
 index beb627e..77d5845 100644
---- a/src/include/date/date.h
-+++ b/src/include/date/date.h
+--- a/include/date/date.h
++++ b/include/date/date.h
 @@ -1797,7 +1797,6 @@ low_level_fmt(std::basic_ostream<CharT, Traits>& os, const year& y)
      os.fill('0');
      os.flags(std::ios::dec | std::ios::internal);
