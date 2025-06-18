@@ -7,7 +7,7 @@ import os
 
 class DateConan(ConanFile):
     name = "date"
-    version = "3.0.3+0"
+    version = "3.0.4+0"
     license = "MIT License https://raw.githubusercontent.com/HowardHinnant/date/master/LICENSE.txt"
     description = "A date and time library based on the C++11/14/17 <chrono> header "
     url = "https://github.com/odant/conan-date"

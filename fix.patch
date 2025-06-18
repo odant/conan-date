@@ -1,5 +1,5 @@
 diff --git a/src/include/date/date.h b/src/include/date/date.h
-index beb627e..77d5845 100644
+index f70153b..135cfe7 100644
 --- a/include/date/date.h
 +++ b/include/date/date.h
 @@ -1797,7 +1797,6 @@ low_level_fmt(std::basic_ostream<CharT, Traits>& os, const year& y)
@@ -43,7 +43,7 @@ index beb627e..77d5845 100644
                          os << y;
                      }
  #if !ONLY_C_LOCALE
-@@ -8222,6 +8222,8 @@ parse(const CharT* format, Parsable& tp,
+@@ -8333,6 +8329,8 @@ parse(const CharT* format, Parsable& tp,
  
  // duration streaming
  
@@ -52,7 +52,7 @@ index beb627e..77d5845 100644
  template <class CharT, class Traits, class Rep, class Period>
  inline
  std::basic_ostream<CharT, Traits>&
-@@ -8232,6 +8234,8 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
+@@ -8343,6 +8341,8 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
                   detail::get_units<CharT>(typename Period::type{});
  }
  
