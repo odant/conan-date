@@ -17,7 +17,7 @@
 
 cmake_minimum_required( VERSION 3.7 )
 
-project( date VERSION 3.0.3 )
+project( date VERSION 3.0.4 )
 set(ABI_VERSION 3) # used as SOVERSION, increment when ABI changes
 
 get_directory_property( has_parent PARENT_DIRECTORY )
@@ -81,6 +81,16 @@ target_sources( date INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/date/julian.h
 )
 
+set( APPLE_MOBILE_PLATFORM FALSE )
+if ( IOS
+    OR CMAKE_SYSTEM_NAME STREQUAL "iOS"
+    OR CMAKE_SYSTEM_NAME STREQUAL "visionOS"
+    OR CMAKE_SYSTEM_NAME STREQUAL "watchOS"
+    OR CMAKE_SYSTEM_NAME STREQUAL "tvOS"
+   )
+    set( APPLE_MOBILE_PLATFORM TRUE )
+endif()
+
 set(TARGET_HEADERS
     include/date/date.h
     include/date/solar_hijri.h
@@ -127,7 +137,7 @@ if( BUILD_TZ_LIB )
       PRIVATE
         include/date/tz_private.h
         src/tz.cpp )
-    if ( IOS )
+    if ( APPLE_MOBILE_PLATFORM )
       target_sources( date-tz
         PUBLIC
           $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/date/ios.h
@@ -158,7 +168,7 @@ if( BUILD_TZ_LIB )
 
     set(TZ_HEADERS include/date/tz.h)
 
-    if( IOS )
+    if( APPLE_MOBILE_PLATFORM )
         list(APPEND TZ_HEADERS include/date/ios.h)
     endif( )
     set_target_properties( date-tz PROPERTIES
@@ -172,8 +182,7 @@ if( BUILD_TZ_LIB )
     endif( )
     if( NOT USE_SYSTEM_TZ_DB AND NOT MANUAL_TZ_DB )
         find_package( CURL REQUIRED )
-        target_include_directories( date-tz SYSTEM PRIVATE ${CURL_INCLUDE_DIRS} )
-        target_link_libraries( date-tz PRIVATE ${CURL_LIBRARIES} )
+        target_link_libraries( date-tz PRIVATE CURL::libcurl )
     endif( )
 endif( )
 
